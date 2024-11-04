@@ -2,6 +2,7 @@ package com.example.HomeBookingApp_back.user.domain;
 
 import com.example.HomeBookingApp_back.sharedkernel.domain.AbstractAuditingEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,16 +14,16 @@ import java.util.UUID;
 public class User extends AbstractAuditingEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.SEQUENCE, generator = "userSequenceGenerator")
-    @SequenceGenerator(name =  "userSequenceGenerator", sequenceName = "user_generator", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSequenceGenerator")
+    @SequenceGenerator(name = "userSequenceGenerator", sequenceName = "user_generator", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
-
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "first_name")
+    private String firstName;
 
     @Column(name = "email")
     private String email;
@@ -30,6 +31,7 @@ public class User extends AbstractAuditingEntity<Long> {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @UuidGenerator
     @Column(name = "public_id", nullable = false)
     private UUID publicId;
 
@@ -37,9 +39,8 @@ public class User extends AbstractAuditingEntity<Long> {
     @JoinTable(name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
-    private Set<Authority> authorities = new HashSet();
+    private Set<Authority> authorities = new HashSet<>();
 
-    //we generated getters and setters here
     @Override
     public Long getId() {
         return id;
@@ -49,20 +50,20 @@ public class User extends AbstractAuditingEntity<Long> {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getEmail() {
@@ -97,17 +98,27 @@ public class User extends AbstractAuditingEntity<Long> {
         this.authorities = authorities;
     }
 
-    //we generated equals and hashes without auth and id.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(imageUrl, user.imageUrl) && Objects.equals(publicId, user.publicId);
+        return Objects.equals(lastName, user.lastName) && Objects.equals(firstName, user.firstName) && Objects.equals(email, user.email) && Objects.equals(imageUrl, user.imageUrl) && Objects.equals(publicId, user.publicId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, email, imageUrl, publicId);
+        return Objects.hash(lastName, firstName, email, imageUrl, publicId);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", email='" + email + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", publicId=" + publicId +
+                '}';
     }
 }

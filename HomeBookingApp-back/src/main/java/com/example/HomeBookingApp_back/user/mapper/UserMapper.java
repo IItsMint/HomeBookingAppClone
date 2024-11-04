@@ -8,9 +8,10 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    ReadUserDTO toReadUserDTO(User user);
+    ReadUserDTO readUserDTOToUser(User user);
 
     default String mapAuthoritiesToString(Authority authority) {
         return authority.getName();
     }
+
 }

@@ -15,10 +15,18 @@ import java.util.Objects;
 public class Authority implements Serializable {
 
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(max=50)
     @Id
     @Column(length = 50)
     private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -31,14 +39,6 @@ public class Authority implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(name);
-    }
-
-    public @NotNull @Size(min = 1, max = 50) String getName() {
-        return name;
-    }
-
-    public void setName(@NotNull @Size(min = 1, max = 50) String name) {
-        this.name = name;
     }
 
     @Override

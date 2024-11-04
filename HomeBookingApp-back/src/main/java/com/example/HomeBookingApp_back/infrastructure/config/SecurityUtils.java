@@ -2,11 +2,9 @@ package com.example.HomeBookingApp_back.infrastructure.config;
 
 import com.example.HomeBookingApp_back.user.domain.Authority;
 import com.example.HomeBookingApp_back.user.domain.User;
-import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
@@ -21,9 +19,9 @@ public class SecurityUtils {
     public static final String ROLE_TENANT = "ROLE_TENANT";
     public static final String ROLE_LANDLORD = "ROLE_LANDLORD";
 
-    public static final String CLAIMS_NAMESPACE = "https://localhost:8080/roles";
+    public static final String CLAIMS_NAMESPACE = "http://localhost:4200/roles";
 
-    public static User map0auth2AttributesToUser(Map<String, Object> attributes) {
+    public static User mapOauth2AttributesToUser(Map<String, Object> attributes) {
         User user = new User();
         String sub = String.valueOf(attributes.get("sub"));
 
