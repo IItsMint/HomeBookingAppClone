@@ -10,12 +10,14 @@ import {NewListingPicture} from '../model/picture.model';
 import {State} from '../../core/model/state.model';
 import {CategoryName} from '../../layout/navbar/category/category.model';
 import {CategoryStepComponent} from './category-step/category-step.component';
+import {FooterStepComponent} from '../../shared/footer-step/footer-step.component';
 
 @Component({
   selector: 'app-properties-create',
   standalone: true,
   imports: [
-    CategoryStepComponent
+    CategoryStepComponent,
+    FooterStepComponent
   ],
   templateUrl: './properties-create.component.html',
   styleUrl: './properties-create.component.scss'

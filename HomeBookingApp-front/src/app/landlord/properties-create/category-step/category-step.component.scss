@@ -1,0 +1,17 @@
+@import "../../../../assets/scss/airbnb-variables";
+
+.categories{
+  .card-step-1{
+    min-width: 160px;
+    width: 20%;
+    box-shadow: 0 0 0 1px $border-color;
+  }
+  .card-step-1:hover,
+  .category-select{
+    border-color: transparent;
+    box-shadow: 0 0 2px $black;
+  }
+  .category-select{
+    background-color: #F7F7F7;
+  }
+}
