@@ -5,7 +5,7 @@ import {ToastService} from '../../layout/toast.service';
 import {AuthService} from '../../core/auth/auth.service';
 import {Router} from '@angular/router';
 import {Step} from './step.model';
-import {CreatedListing, NewListing} from '../model/listing.model';
+import {CreatedListing, NewListing, NewListingInfo} from '../model/listing.model';
 import {NewListingPicture} from '../model/picture.model';
 import {State} from '../../core/model/state.model';
 import {CategoryName} from '../../layout/navbar/category/category.model';
@@ -14,6 +14,7 @@ import {FooterStepComponent} from '../../shared/footer-step/footer-step.componen
 import {CategoryStepComponent} from './step/category-step/category-step.component';
 import {LocationMapComponent} from './step/location-step/location-map/location-map.component';
 import {LocationStepComponent} from './step/location-step/location-step.component';
+import {InfoStepComponent} from './step/info-step/info-step.component';
 
 @Component({
   selector: 'app-properties-create',
@@ -22,7 +23,8 @@ import {LocationStepComponent} from './step/location-step/location-step.componen
     CategoryStepComponent,
     FooterStepComponent,
     LocationMapComponent,
-    LocationStepComponent
+    LocationStepComponent,
+    InfoStepComponent
   ],
   templateUrl: './properties-create.component.html',
   styleUrl: './properties-create.component.scss'
@@ -173,5 +175,9 @@ export class PropertiesCreateComponent {
 
   onLocationChange(newLocation: string) {
   this.newListing.location=newLocation;
+  }
+
+  onInfoChange(newInfo:NewListingInfo) {
+    this.newListing.infos=newInfo;
   }
 }

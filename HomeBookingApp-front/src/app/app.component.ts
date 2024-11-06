@@ -18,7 +18,6 @@ import {MessageService} from "primeng/api";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-
   faIconLibrary = inject(FaIconLibrary);
   isListingView = true;
   toastService = inject(ToastService);
