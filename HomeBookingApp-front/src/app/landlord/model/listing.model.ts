@@ -29,3 +29,6 @@ export interface CreatedListing{
 
   publicId: string,
 }
+
+export class CardListing {
+}

@@ -1,0 +1,29 @@
+<div class="mb-3">
+  <h1 class="mb-1">Provide a Title and Description for Your Property</h1>
+  <h2 class="mt-0">Keep It Short and Sweet. Titles Can Be Updated Later</h2>
+  <form #formDescription="ngForm" novalidate class="w-full">
+    <input #titleInput="ngModel" name="title" placeholder="Title"
+           required class="w-full p-inputtext-lg" type="text" pInputText [ngModel]="description().title.value"
+           (ngModelChange)="onTitleChange($event)">
+
+    @if(titleInput.dirty && titleInput.invalid){
+      <small id="title-required" class="text-primary">Please provide a title for your property.</small>
+    }
+    @else {
+      <div class="placeholde-validation"></div>
+    }
+
+    <textarea #descriptionInput="ngModel" name="description" class="w-full mt-2"
+              required placeholder="Summary" rows="5" cols="30" pInputTextarea
+              [ngModel]="description().description.value" (ngModelChange)="onDescriptionChange($event)">
+    </textarea>
+
+    @if(descriptionInput.dirty && descriptionInput.invalid){
+      <small id="description-required" class="text-primary">A brief description of your property is required.</small>
+    }
+    @else {
+      <div class="placeholde-validation"></div>
+    }
+
+  </form>
+</div>

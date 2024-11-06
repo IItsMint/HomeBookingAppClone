@@ -31,7 +31,7 @@ public class LandlordResource {
     private final LandlordService landlordService;
     private final Validator validator;
     private final UserService userService;
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public LandlordResource(LandlordService landlordService, Validator validator, UserService userService) {
         this.landlordService = landlordService;
@@ -39,6 +39,7 @@ public class LandlordResource {
         this.userService = userService;
     }
 
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CreatedListingDTO> create(
             MultipartHttpServletRequest request, @RequestPart(name = "dto") String saveListingDTOString
             ) throws IOException

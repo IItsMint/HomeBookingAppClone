@@ -1,0 +1,20 @@
+<div class="mb-3">
+  <h1 class="mb-1">Choose a Strategic Price to Maximize Bookings</h1>
+  <h2 class="mt-0">This can be adjusted at any time</h2>
+  <form #formPrice="ngForm" novalidate class="w-full">
+    <span class="p-input-icon-left w-full relative">
+      <fa-icon icon="dollar-sign" class="dollar absolute top-0"></fa-icon>
+      <input #priceInput="ngModel" name="price" required min="1" class="w-full p-inputtext-lg" type="number"
+             pInputText [ngModel]="price().value" (ngModelChange)="onPriceChange($event)">
+      @if(priceInput.dirty && priceInput.hasError('required')){
+        <small id="price-required" class="text-primary">Please enter a price to proceed...</small>
+      }
+      @else if (priceInput.dirty && priceInput.hasError('min')){
+        <small id="price-min" class="text-primary">Enter a valid amount; negative prices are not permitted...</small>
+      }
+      @else {
+          <div class="placeholder-validation"></div>
+      }
+    </span>
+  </form>
+</div>
