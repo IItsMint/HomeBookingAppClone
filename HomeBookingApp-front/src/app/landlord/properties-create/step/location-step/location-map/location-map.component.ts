@@ -34,15 +34,13 @@ export class LocationMapComponent {
   locationChange = new EventEmitter<string>();
 
   formatLabel = (country: Country) => country.flag + " " + country.name;
-
   options = {
     layers: [
-      // z for zoom, x for le column and y for le row.
       tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "..." })
     ],
-    zoom: 5,  // Adjusted zoom level for better visibility of the required regions
-    center: latLng(48, 25),  // Centered on Europe, showing UK, Turkey, Cyprus, Moscow and Central Europe
-  };
+    zoom: 5,  // Set zoom to 5 to zoom in slightly
+    center: latLng(42, 18),  // Centered to focus on the Balkans region
+  }
 
   layersControl = {
     baseLayers: {
@@ -61,7 +59,7 @@ export class LocationMapComponent {
         [54.4, 15.1],
       ])
     }
-  };
+  }
 
   countries: Array<Country> = [];
   filteredCountries: Array<Country> = [];
@@ -81,8 +79,6 @@ export class LocationMapComponent {
 
   onLocationChange(newEvent: AutoCompleteSelectEvent) {
     const newCountry = newEvent.value as Country;
-
-    // We used cca3 since we want to send the country code, not the whole name.
     this.locationChange.emit(newCountry.cca3);
   }
 
@@ -92,8 +88,9 @@ export class LocationMapComponent {
       if (countriesState.status === "OK" && countriesState.value) {
         this.countries = countriesState.value;
         this.filteredCountries = countriesState.value;
-        this.changeMapLocation(this.location());
-      } else if (countriesState.status === "ERROR") {
+        this.changeMapLocation(this.location())
+      }
+      else if (countriesState.status === "ERROR") {
         this.toastService.send({
           severity: "error", summary: "Error",
           detail: "Oops... An error occurred while loading the countries during location change."
@@ -119,10 +116,10 @@ export class LocationMapComponent {
           }
         });
     }
-  }
+  };
 
   search(newCompleteEvent: AutoCompleteCompleteEvent): void {
-    this.filteredCountries = this.countries.filter(country =>
-      country.name.common.toLowerCase().startsWith(newCompleteEvent.query));
+    this.filteredCountries = this.countries.filter(country => country.name.common.toLowerCase().startsWith(newCompleteEvent.query));
   }
+
 }

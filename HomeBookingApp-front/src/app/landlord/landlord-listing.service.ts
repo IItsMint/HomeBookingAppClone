@@ -17,10 +17,10 @@ export class LandlordListingService {
   private create$: WritableSignal<State<CreatedListing>> = signal(State.Builder<CreatedListing>().forInit())
   createSig = computed(() => this.create$());
 
-  create(newListing: NewListing): void{
+  create(newListing: NewListing): void {
     const formData = new FormData();
-    for(let num:number = 0; num < newListing.pictures.length; num++){
-      formData.append("picture-"+ num, newListing.pictures[num].file)
+    for(let i = 0; i < newListing.pictures.length; ++i) {
+      formData.append("picture-" + i, newListing.pictures[i].file);
     }
 
     const clone = structuredClone(newListing);
