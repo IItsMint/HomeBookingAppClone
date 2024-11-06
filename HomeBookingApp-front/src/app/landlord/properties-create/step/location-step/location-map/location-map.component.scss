@@ -1,5 +1,7 @@
 @import "./../../../../../../assets/scss/airbnb-variables";
 
+@import 'leaflet-defaulticon-compatibility';
+
 ::ng-deep .autocomplete-airbnb {
   width: 400px!important;
 }

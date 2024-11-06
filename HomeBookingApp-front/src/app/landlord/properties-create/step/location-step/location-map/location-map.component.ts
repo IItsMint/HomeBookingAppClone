@@ -1,12 +1,15 @@
-import { Component, effect, EventEmitter, inject, input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
-import { ToastService } from '../../../../../layout/toast.service';
-import { CountryService } from '../country.service';
-import { OpenStreetMapProvider } from 'leaflet-geosearch';
-import { Country } from '../country.model';
-import L, { circle, latLng, polygon, tileLayer } from 'leaflet';
+import {Component, effect, EventEmitter, inject, input, Output} from '@angular/core';
+import {LeafletModule} from "@asymmetrik/ngx-leaflet";
+import {FormsModule} from "@angular/forms";
+import {AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent} from "primeng/autocomplete";
+import {CountryService} from "../country.service";
+import {ToastService} from "../../../../../layout/toast.service";
+import {OpenStreetMapProvider} from "leaflet-geosearch";
+import {Country} from "../country.model";
+import L, {circle, latLng, polygon, tileLayer} from "leaflet";
+
+
+
 
 @Component({
   selector: 'app-location-map',
@@ -33,7 +36,7 @@ export class LocationMapComponent {
   @Output()
   locationChange = new EventEmitter<string>();
 
-  formatLabel = (country: Country) => country.flag + " " + country.name;
+  formatLabel = (country: Country) => country.flag + " " + country.name.common;
   options = {
     layers: [
       tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "..." })
