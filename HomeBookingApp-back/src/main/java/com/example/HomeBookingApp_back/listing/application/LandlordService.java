@@ -1,14 +1,20 @@
 package com.example.HomeBookingApp_back.listing.application;
 
 import com.example.HomeBookingApp_back.listing.application.dto.CreatedListingDTO;
+import com.example.HomeBookingApp_back.listing.application.dto.DisplayCardListingDTO;
 import com.example.HomeBookingApp_back.listing.application.dto.SaveListingDTO;
 import com.example.HomeBookingApp_back.listing.domain.Listing;
 import com.example.HomeBookingApp_back.listing.mapper.ListingMapper;
 import com.example.HomeBookingApp_back.listing.repository.ListingRepository;
+import com.example.HomeBookingApp_back.sharedkernel.service.State;
 import com.example.HomeBookingApp_back.user.application.Auth0Service;
 import com.example.HomeBookingApp_back.user.application.UserService;
 import com.example.HomeBookingApp_back.user.application.dto.ReadUserDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LandlordService {
@@ -40,5 +46,24 @@ public class LandlordService {
         return listingMapper.listingToCreatedListingDTO(savedListing);
     }
 
+    @Transactional(readOnly = true)
+    public List<DisplayCardListingDTO> getAllProperties(ReadUserDTO landlord) {
+        List<Listing> properties = listingRepository.findAllByLandlordPublicIdFetchCoverPicture(landlord.publicId());
+        return listingMapper.listingToDisplayCardListingDTOs(properties);
+    }
+
+    @Transactional
+    //we are doing it with two parameters hence only the landlord who owned the listing can delete it.
+    public State<UUID, String> delete(UUID publicId, ReadUserDTO landlord) {
+
+        long deletedSuccessfully = listingRepository.deleteByPublicIdAndLandlordPublicId(publicId, landlord.publicId());
+
+        if(deletedSuccessfully > 0){
+            return State.<UUID, String>builder().forSuccess(publicId);
+        }
+        else {
+            return State.<UUID, String>builder().forUnauthorized("You don't have permission to delete this listing...");
+        }
+    }
 
 }
