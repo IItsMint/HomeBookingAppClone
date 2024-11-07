@@ -30,5 +30,17 @@ export interface CreatedListing{
   publicId: string,
 }
 
-export class CardListing {
+export interface DisplayPicture{
+  file?:string,
+  fileContentType:string,
+  isCover?:boolean,
+}
+
+export interface CardListing{
+  price: PriceVo,
+  location:string,
+  cover: DisplayPicture,
+  bookingCategory: CategoryName,
+  publicId: string,
+  loading:boolean,
 }
