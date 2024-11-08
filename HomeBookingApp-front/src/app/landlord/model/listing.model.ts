@@ -1,6 +1,7 @@
 import {BathsVo, BedroomsVo, BedsVo, DescriptionVo, GuestsVo, PriceVo, TitleVo} from './listing-vo.model';
 import {CategoryName} from '../../layout/navbar/category/category.model';
 import {NewListingPicture} from './picture.model';
+import {LandlordListingService} from '../landlord-listing.service';
 
 export interface NewListingInfo{
 
@@ -43,4 +44,19 @@ export interface CardListing{
   bookingCategory: CategoryName,
   publicId: string,
   loading:boolean,
+}
+
+export interface Listing{
+  description:Description,
+  pictures: Array<DisplayPicture>,
+  infos: NewListingInfo,
+  price: PriceVo,
+  category: CategoryName,
+  location: string,
+  landlord: LandlordListing,
+}
+
+export interface LandlordListing {
+  firstName: string,
+  imageUrl: string,
 }

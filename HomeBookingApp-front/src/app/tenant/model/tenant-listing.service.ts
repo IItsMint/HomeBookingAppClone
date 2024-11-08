@@ -1,7 +1,7 @@
 import {computed, inject, Injectable, signal, WritableSignal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {State} from '../../core/model/state.model';
-import {CardListing, CreatedListing} from '../../landlord/model/listing.model';
+import {CardListing, CreatedListing, Listing} from '../../landlord/model/listing.model';
 import {createPaginationOption, Page, Pagination} from '../../core/model/request.model';
 import {CategoryName} from '../../layout/navbar/category/category.model';
 import {CardListingComponent} from '../../shared/card-listing/card-listing.component';
@@ -14,12 +14,16 @@ import {environment} from '../../../environments/environment';
 export class TenantListingService {
 
   http=inject(HttpClient);
-  private getAllByCategory$: WritableSignal<State<Page<CardListing>>> =signal(State.Builder<Page<CardListing>>().forInit());
-
   constructor() {
+
   }
 
+  private getOneByPublicId$: WritableSignal<State<Listing>> =signal(State.Builder<Listing>().forInit())
+  getOneByPublicIdSignal =computed(() => this.getOneByPublicId$());
+
+  private getAllByCategory$: WritableSignal<State<Page<CardListing>>> =signal(State.Builder<Page<CardListing>>().forInit());
   getAllByCategorySignal=computed(()=> this.getAllByCategory$());
+
   getAllByCategory(pageRequest: Pagination, category:CategoryName){
     let params =createPaginationOption(pageRequest);
     params = params.set("category",category);
@@ -35,5 +39,16 @@ export class TenantListingService {
     this.getAllByCategory$.set(State.Builder<Page<CardListing>>().forInit())
   };
 
+  getOneByPublicId(publicId: string): void {
+    const params =new HttpParams().set("publicId", publicId);
+    this.http.get<Listing>(`${environment.API_URL}/tenant-listing/get-one`, {params}).subscribe({
+        next: listing => this.getOneByPublicId$.set(State.Builder<Listing>().forSuccess(listing)),
+        error: err => this.getOneByPublicId$.set(State.Builder<Listing>().forError(err)),
+      });
+  };
+
+  resetGetOneByPublicId(){
+    this.getOneByPublicId$.set(State.Builder<Listing>().forInit());
+  };
 
 }
