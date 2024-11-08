@@ -2,6 +2,7 @@ package com.example.HomeBookingApp_back.listing.application;
 
 import com.example.HomeBookingApp_back.listing.application.dto.CreatedListingDTO;
 import com.example.HomeBookingApp_back.listing.application.dto.DisplayCardListingDTO;
+import com.example.HomeBookingApp_back.listing.application.dto.ListingCreateBookingDTO;
 import com.example.HomeBookingApp_back.listing.application.dto.SaveListingDTO;
 import com.example.HomeBookingApp_back.listing.domain.Listing;
 import com.example.HomeBookingApp_back.listing.mapper.ListingMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -44,6 +46,10 @@ public class LandlordService {
         auth0Service.addLandlordRoleToUser(userConnected);
 
         return listingMapper.listingToCreatedListingDTO(savedListing);
+    }
+
+    public Optional<ListingCreateBookingDTO> getByListingPublicIc(UUID publicId){
+        return listingRepository.findByPublicId(publicId).map(listingMapper::mapListingToListingCreateBookingDTO);
     }
 
     @Transactional(readOnly = true)

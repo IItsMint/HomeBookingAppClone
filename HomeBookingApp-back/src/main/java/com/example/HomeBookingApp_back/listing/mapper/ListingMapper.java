@@ -1,10 +1,7 @@
 package com.example.HomeBookingApp_back.listing.mapper;
 
 
-import com.example.HomeBookingApp_back.listing.application.dto.CreatedListingDTO;
-import com.example.HomeBookingApp_back.listing.application.dto.DisplayCardListingDTO;
-import com.example.HomeBookingApp_back.listing.application.dto.DisplayListingDTO;
-import com.example.HomeBookingApp_back.listing.application.dto.SaveListingDTO;
+import com.example.HomeBookingApp_back.listing.application.dto.*;
 import com.example.HomeBookingApp_back.listing.application.dto.vo.PriceVO;
 import com.example.HomeBookingApp_back.listing.domain.Listing;
 import org.mapstruct.Mapper;
@@ -54,4 +51,7 @@ public interface ListingMapper {
     @Mapping(target = "price.value", source = "price")
     @Mapping(target = "category", source = "bookingCategory")
     DisplayListingDTO listingToDisplayListingDTO(Listing listing);
+
+    @Mapping(target = "listingPublicId", source = "publicId")
+    ListingCreateBookingDTO mapListingToListingCreateBookingDTO(Listing listing);
 }

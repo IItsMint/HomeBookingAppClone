@@ -13,8 +13,8 @@ import java.util.UUID;
 public class Booking extends AbstractAuditingEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.SEQUENCE, generator = "bookingSequenceGenerator")
-    @SequenceGenerator(name =  "bookingSequenceGenerator", sequenceName = "booking_generator", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookingSequenceGenerator")
+    @SequenceGenerator(name = "bookingSequenceGenerator", sequenceName = "booking_generator", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -32,13 +32,13 @@ public class Booking extends AbstractAuditingEntity<Long> {
     private int totalPrice;
 
     @Column(name = "nb_of_travelers", nullable = false)
-    private int numbersOfTravelers;
+    private int numberOfTravelers;
 
     @Column(name = "fk_tenant", nullable = false)
     private UUID fkTenant;
 
     @Column(name = "fk_listing", nullable = false)
-    private UUID fkLandLord;
+    private UUID fkListing;
 
     //Let's create getters and setters for all.
     @Override
@@ -82,12 +82,12 @@ public class Booking extends AbstractAuditingEntity<Long> {
         this.totalPrice = totalPrice;
     }
 
-    public int getNumbersOfTravelers() {
-        return numbersOfTravelers;
+    public int getNumberOfTravelers() {
+        return numberOfTravelers;
     }
 
-    public void setNumbersOfTravelers(int numbersOfTravelers) {
-        this.numbersOfTravelers = numbersOfTravelers;
+    public void setNumberOfTravelers(int numberOfTravelers) {
+        this.numberOfTravelers = numberOfTravelers;
     }
 
     public UUID getFkTenant() {
@@ -98,13 +98,14 @@ public class Booking extends AbstractAuditingEntity<Long> {
         this.fkTenant = fkTenant;
     }
 
-    public UUID getFkLandLord() {
-        return fkLandLord;
+    public UUID getFkListing() {
+        return fkListing;
     }
 
-    public void setFkLandLord(UUID fkLandLord) {
-        this.fkLandLord = fkLandLord;
+    public void setFkListing(UUID fkListing) {
+        this.fkListing = fkListing;
     }
+
 
     //let's create equals and hash code without id,public id.
     @Override
@@ -112,25 +113,25 @@ public class Booking extends AbstractAuditingEntity<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Booking booking = (Booking) o;
-        return totalPrice == booking.totalPrice && numbersOfTravelers == booking.numbersOfTravelers && Objects.equals(startDate, booking.startDate) && Objects.equals(endDate, booking.endDate) && Objects.equals(fkTenant, booking.fkTenant) && Objects.equals(fkLandLord, booking.fkLandLord);
+        return totalPrice == booking.totalPrice && numberOfTravelers == booking.numberOfTravelers && Objects.equals(startDate, booking.startDate) && Objects.equals(endDate, booking.endDate) && Objects.equals(fkTenant, booking.fkTenant) && Objects.equals(fkListing, booking.fkListing);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startDate, endDate, totalPrice, numbersOfTravelers, fkTenant, fkLandLord);
+        return Objects.hash(startDate, endDate, totalPrice, numberOfTravelers, fkTenant, fkListing);
     }
 
-    //let's create toString without id and public id.
 
+    //let's create toString without id and public id.
     @Override
     public String toString() {
         return "Booking{" +
                 "startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", totalPrice=" + totalPrice +
-                ", numbersOfTravelers=" + numbersOfTravelers +
+                ", numberOfTravelers=" + numberOfTravelers +
                 ", fkTenant=" + fkTenant +
-                ", fkLandLord=" + fkLandLord +
+                ", fkListing=" + fkListing +
                 '}';
     }
 }
