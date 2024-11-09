@@ -101,6 +101,8 @@ public class BookingService {
     }
 
     //let's create cancel method for the user.
+    //don't forget to transactional here , it ain't delete if you miss it.
+    @Transactional
     public State<UUID, String> cancel(UUID bookingPublicId, UUID listingPublicId) {
         ReadUserDTO connectedUser =userService.getAuthenticatedUserFromSecurityContext();
         int deleteSuccess =bookingRepository.deleteBookingByFkTenantAndPublicId(connectedUser.publicId(), bookingPublicId);
