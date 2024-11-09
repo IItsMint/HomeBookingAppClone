@@ -1,4 +1,5 @@
 package com.example.HomeBookingApp_back.listing.repository;
+import com.example.HomeBookingApp_back.listing.application.dto.DisplayCardListingDTO;
 import com.example.HomeBookingApp_back.listing.domain.BookingCategory;
 import com.example.HomeBookingApp_back.listing.domain.Listing;
 
@@ -33,6 +34,6 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
     Optional<Listing> findByPublicId(UUID publicId);
 
 
-
+    List<Listing> findAllByPublicIdIn(List<UUID> allListingsPublicId);
 }
 

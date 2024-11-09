@@ -1,12 +1,15 @@
 package com.example.HomeBookingApp_back.booking.application;
 
 import com.example.HomeBookingApp_back.booking.application.dto.BookedDateDTO;
+import com.example.HomeBookingApp_back.booking.application.dto.BookedListingDTO;
 import com.example.HomeBookingApp_back.booking.application.dto.NewBookingDTO;
 import com.example.HomeBookingApp_back.booking.domain.Booking;
 import com.example.HomeBookingApp_back.booking.mapper.BookingMapper;
 import com.example.HomeBookingApp_back.booking.repository.BookingRepository;
 import com.example.HomeBookingApp_back.listing.application.LandlordService;
+import com.example.HomeBookingApp_back.listing.application.dto.DisplayCardListingDTO;
 import com.example.HomeBookingApp_back.listing.application.dto.ListingCreateBookingDTO;
+import com.example.HomeBookingApp_back.listing.application.dto.vo.PriceVO;
 import com.example.HomeBookingApp_back.sharedkernel.service.State;
 import com.example.HomeBookingApp_back.user.application.UserService;
 import com.example.HomeBookingApp_back.user.application.dto.ReadUserDTO;
@@ -76,5 +79,38 @@ public class BookingService {
        return bookingRepository.findAllByFkListing(publicId).stream().map(bookingMapper::bookingToCheckAvailability).toList();
     }
 
+    public List<BookedListingDTO> getBookedListing() {
+        ReadUserDTO connectedUser =userService.getAuthenticatedUserFromSecurityContext();
+        List<Booking> allBookings =bookingRepository.findAllByFkTenant(connectedUser.publicId());
+        List<UUID> allListingsPublicId =allBookings.stream().map(Booking::getFkListing).toList();
+        List<DisplayCardListingDTO> allListings =landlordService.getCardDisplayByListingPublicId(allListingsPublicId);
+        //we are trying to create a dto with these two lists
+        return mapBookingToBookedListing(allBookings, allListings);
+    }
 
+    @Transactional(readOnly = true)
+    public List<BookedListingDTO> mapBookingToBookedListing(List<Booking> allBookings, List<DisplayCardListingDTO> allListings) {
+        return allBookings.stream().map(booking -> {
+            DisplayCardListingDTO displayCardListingDTO = allListings.stream().filter(listing ->
+                    listing.publicId().equals(booking.getFkListing())).findFirst().orElseThrow();
+
+            BookedDateDTO dates = bookingMapper.bookingToCheckAvailability(booking);
+            return new BookedListingDTO(displayCardListingDTO.cover(), displayCardListingDTO.location(), dates,
+                    new PriceVO(booking.getTotalPrice()), booking.getPublicId(), displayCardListingDTO.publicId());
+        }).toList();
+    }
+
+    //let's create cancel method for the user.
+    public State<UUID, String> cancel(UUID bookingPublicId, UUID listingPublicId) {
+       ReadUserDTO connectedUser =userService.getAuthenticatedUserFromSecurityContext();
+       int deleteSuccess =bookingRepository.deleteBookingByFkTenantAndPublicId(connectedUser.publicId(), bookingPublicId);
+
+       if(deleteSuccess >= 1){
+           return State.<UUID, String>builder().forSuccess(bookingPublicId);
+       }
+       else{
+           return State.<UUID, String>builder().forError("404 Booking Not Found");
+       }
+
+    }
 }

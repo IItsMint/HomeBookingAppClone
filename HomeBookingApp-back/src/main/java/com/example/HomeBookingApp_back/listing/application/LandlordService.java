@@ -72,4 +72,8 @@ public class LandlordService {
         }
     }
 
+    public List<DisplayCardListingDTO> getCardDisplayByListingPublicId(List<UUID> allListingsPublicId) {
+        return listingRepository.findAllByPublicIdIn(allListingsPublicId)
+                .stream().map(listingMapper::listingToDisplayCardListingDTO).toList();
+    }
 }
