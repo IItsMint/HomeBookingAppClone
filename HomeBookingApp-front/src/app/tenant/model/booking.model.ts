@@ -20,7 +20,7 @@ export interface BookedListing{
 export interface CreateBooking{
   startDate: Date,
   endDate: Date,
-  ListingPublicId: string,
+  listingPublicId: string,
 
 }
 

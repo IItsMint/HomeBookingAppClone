@@ -12,10 +12,11 @@ import dayjs from 'dayjs';
 export class BookingService {
   private http:HttpClient =inject(HttpClient);
   private createBooking$: WritableSignal<State<boolean>> =signal(State.Builder<boolean>().forInit());
-  createBookingSignal =computed(() =>this.createBooking$);
+  createBookingSignal =computed(() =>this.createBooking$());
+
 
   private checkAvailability$: WritableSignal<State<Array<BookedDatesDTOFromClient>>> =signal(State.Builder<Array<BookedDatesDTOFromClient>>().forInit());
-  checkAvailabilitySignal =computed(() =>this.checkAvailability$);
+  checkAvailabilitySignal =computed(() =>this.checkAvailability$());
 
   constructor() { }
 
@@ -33,6 +34,10 @@ export class BookingService {
       next: bookedDates =>this.checkAvailability$.set(State.Builder<Array<BookedDatesDTOFromClient>>().forSuccess(bookedDates)),
       error: err => this.checkAvailability$.set(State.Builder<Array<BookedDatesDTOFromClient>>().forError(err))
     })
+  }
+
+  resetCreateBooking(){
+    this.createBooking$.set(State.Builder<boolean>().forInit());
   }
 
   private mapDateToDayJS =() =>{
