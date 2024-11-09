@@ -7,7 +7,6 @@ import com.example.HomeBookingApp_back.booking.application.dto.NewBookingDTO;
 import com.example.HomeBookingApp_back.sharedkernel.service.State;
 import com.example.HomeBookingApp_back.sharedkernel.service.StatusNotification;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,7 @@ public class BookingResource {
         State<Void, String> createState =bookingService.create(newBookingDTO);
 
         if (createState.getStatus().equals(StatusNotification.ERROR)) {
-           ProblemDetail problemDetail  =ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, createState.getError());
+            ProblemDetail problemDetail  =ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, createState.getError());
             return  ResponseEntity.of(problemDetail).build();
         }
         else{
@@ -54,11 +53,13 @@ public class BookingResource {
         State<UUID, String> cancelState =bookingService.cancel(bookingPublicId, listingPublicId);
         //lets implement error handling.
         if (cancelState.getStatus().equals(StatusNotification.ERROR)) {
-          ProblemDetail problemDetail =ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, cancelState.getError());
+            ProblemDetail problemDetail =ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, cancelState.getError());
             return ResponseEntity.of(problemDetail).build();
         }
         else{
             return ResponseEntity.ok(bookingPublicId);
         }
     }
+
+
 }

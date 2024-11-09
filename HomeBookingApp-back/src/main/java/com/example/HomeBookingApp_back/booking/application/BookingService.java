@@ -38,7 +38,7 @@ public class BookingService {
         this.landlordService = landlordService;
     }
 
-    @Transactional
+    //@Transactional
     public State<Void, String> create(NewBookingDTO newBookingDTO) {
         Booking booking =bookingMapper.newBookingToBooking(newBookingDTO);
         Optional<ListingCreateBookingDTO> listingOptional =landlordService.getByListingPublicIc(newBookingDTO.listingPublicId());
@@ -48,7 +48,7 @@ public class BookingService {
         }
 
         //we need to check, if there is a booking already for that specific date,
-       boolean occupied =bookingRepository.bookingExistsAtInterval(newBookingDTO.startDate(), newBookingDTO.endDate(), newBookingDTO.listingPublicId());
+        boolean occupied =bookingRepository.bookingExistsAtInterval(newBookingDTO.startDate(), newBookingDTO.endDate(), newBookingDTO.listingPublicId());
 
         if(occupied){
             return State.<Void, String>builder().forError("Selected date interval is already taken. Adjust your booking dates and try again.");
@@ -72,13 +72,13 @@ public class BookingService {
 
     }
 
-    //To check if the reservation made, let's define second service.
-    //which is showing all the reservation for a specific home.
     @Transactional(readOnly = true)
     public List<BookedDateDTO> checkAvailability(UUID publicId) {
-       return bookingRepository.findAllByFkListing(publicId).stream().map(bookingMapper::bookingToCheckAvailability).toList();
+        return bookingRepository.findAllByFkListing(publicId).stream().map(bookingMapper::bookingToCheckAvailability).toList();
     }
 
+
+    @Transactional(readOnly = true)
     public List<BookedListingDTO> getBookedListing() {
         ReadUserDTO connectedUser =userService.getAuthenticatedUserFromSecurityContext();
         List<Booking> allBookings =bookingRepository.findAllByFkTenant(connectedUser.publicId());
@@ -102,15 +102,15 @@ public class BookingService {
 
     //let's create cancel method for the user.
     public State<UUID, String> cancel(UUID bookingPublicId, UUID listingPublicId) {
-       ReadUserDTO connectedUser =userService.getAuthenticatedUserFromSecurityContext();
-       int deleteSuccess =bookingRepository.deleteBookingByFkTenantAndPublicId(connectedUser.publicId(), bookingPublicId);
+        ReadUserDTO connectedUser =userService.getAuthenticatedUserFromSecurityContext();
+        int deleteSuccess =bookingRepository.deleteBookingByFkTenantAndPublicId(connectedUser.publicId(), bookingPublicId);
 
-       if(deleteSuccess >= 1){
-           return State.<UUID, String>builder().forSuccess(bookingPublicId);
-       }
-       else{
-           return State.<UUID, String>builder().forError("404 Booking Not Found");
-       }
+        if(deleteSuccess >= 1){
+            return State.<UUID, String>builder().forSuccess(bookingPublicId);
+        }
+        else{
+            return State.<UUID, String>builder().forError("404 Booking Not Found");
+        }
 
     }
 }
