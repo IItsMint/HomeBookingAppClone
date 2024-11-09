@@ -15,19 +15,19 @@ import {CurrencyPipe} from '@angular/common';
   selector: 'app-book-date',
   standalone: true,
   imports: [FormsModule,
-  MessageModule,
-  CalendarModule,
-  CurrencyPipe,
+    MessageModule,
+    CalendarModule,
+    CurrencyPipe,
   ],
   templateUrl: './book-date.component.html',
   styleUrl: './book-date.component.scss'
 })
 export class BookDateComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
-      this.bookingService.resetCreateBooking();
+    this.bookingService.resetCreateBooking();
   }
   ngOnInit(): void {
-      this.bookingService.checkAvailability(this.listingPublicId());
+    this.bookingService.checkAvailability(this.listingPublicId());
   }
   listing=input.required<Listing>();
   listingPublicId=input.required<string>();
@@ -38,10 +38,10 @@ export class BookDateComponent implements OnInit, OnDestroy{
   router=inject(Router);
 
   //let's initialize some values.
-  bookingDate=new Array<Date>();
+  bookingDates=new Array<Date>();
   totalPrice=0;
   minDate=new Date();//initialized as today's date. Hence, user can not make reservation for the past.
-  bookedDate=new Array<Date>();
+  bookedDates=new Array<Date>();
 
   constructor() {
     this.listenToCheckAvailableDate();
@@ -49,12 +49,12 @@ export class BookDateComponent implements OnInit, OnDestroy{
   }
 
   validateMakeBooking() {
-    return this.authService.isAuthenticated() &&this.bookingDate.length === 2 &&this.bookingDate[0] !==null
-      &&this.bookingDate[1] !==null &&this.bookingDate[0].getDate() !==this.bookingDate[1].getDate();
+    return this.authService.isAuthenticated() &&this.bookingDates.length === 2 &&this.bookingDates[0] !==null
+      &&this.bookingDates[1] !==null &&this.bookingDates[0].getDate() !==this.bookingDates[1].getDate();
   }
 
   onDateChange(newBookingDate: Array<Date>) {
-    this.bookingDate = newBookingDate;
+    this.bookingDates = newBookingDate;
     if (this.validateMakeBooking()) {
       const startBookingDateDayJS = dayjs(newBookingDate[0]);
       const endBookingDateDayJS = dayjs(newBookingDate[1]);
@@ -64,13 +64,12 @@ export class BookDateComponent implements OnInit, OnDestroy{
     }
   }
 
-
   //this is for when user presses the reservation button we will call this method.
   onNewBooking() {
     const newBooking: CreateBooking = {
       listingPublicId: this.listingPublicId(),
-      startDate: this.bookingDate[0],
-      endDate: this.bookingDate[1],
+      startDate: this.bookingDates[0],
+      endDate: this.bookingDates[1],
     }
     this.bookingService.create(newBooking);
   };
@@ -81,7 +80,7 @@ export class BookDateComponent implements OnInit, OnDestroy{
       const checkAvailabilityState = this.bookingService.checkAvailabilitySignal();
 
       if (checkAvailabilityState.status === "OK") {
-        this.bookedDate = this.mapBookedDatesToDate(checkAvailabilityState.value!);//we have to make some transformation hence we implemented map.
+        this.bookedDates = this.mapBookedDatesToDate(checkAvailabilityState.value!);//we have to make some transformation hence we implemented map.
       }
       else if (checkAvailabilityState.status === "ERROR") {
         this.toastService.send({severity: "error", summary: "Error",detail: "Sorry, we're having trouble fetching the blocked dates. Please try again later."});

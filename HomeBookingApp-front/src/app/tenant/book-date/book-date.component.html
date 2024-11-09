@@ -2,8 +2,8 @@
   <span class="text-2xl font-bold">
     {{listing().price.value|currency}}
   </span>
-  <p-calendar class="max-w-full block mt4" [ngModel]="bookingDate" (ngModelChange)="onDateChange($event)"
-              [minDate]="minDate" [inline]="true" [touchUI]="false" [selectOtherMonths]="true" [disabledDates]="bookedDate" selectionMode="range">
+  <p-calendar class="max-w-full block mt4" [ngModel]="bookingDates" (ngModelChange)="onDateChange($event)"
+              [minDate]="minDate" [inline]="true" [touchUI]="false" [selectOtherMonths]="true" [disabledDates]="bookedDates" selectionMode="range">
   </p-calendar>
   <button [disabled]="!validateMakeBooking()" [class.p-disabled]="!validateMakeBooking()" (click)="onNewBooking()"
           class=" p-button w-full mt-4 justify-content-center"> Confirm Reservation
