@@ -10,9 +10,17 @@
   }
 </div>
 }
-@if (!loading && listings?.length === 0){
+@if (!loading && listings?.length === 0 && !initialSearch){
   <div class="flex flex-column align-items-center justify-content-center h-10rem">
     <h1>Looks like there are no listings here.</h1>
     <div class="text-xl">Check back soon or explore other categories!</div>
+  </div>
+}
+
+@if (!loading && initialSearch){
+  <div class="flex flex-column align-items-center justify-content-center h-10rem">
+    <h1>Sorry, no listings meet your criteria.</h1>
+    <div class="text-xl">Explore other options or adjust your search.</div>
+    <button class="p-button mt-3" (click)="onResetSearchFilter()">Clear & Explore!</button>
   </div>
 }

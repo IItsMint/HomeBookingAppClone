@@ -6,6 +6,9 @@ import {createPaginationOption, Page, Pagination} from '../../core/model/request
 import {CategoryName} from '../../layout/navbar/category/category.model';
 import {CardListingComponent} from '../../shared/card-listing/card-listing.component';
 import {environment} from '../../../environments/environment';
+import {Subject} from 'rxjs';
+import {Search} from '../search/search.model';
+import {Card} from 'primeng/card';
 
 
 @Injectable({
@@ -23,6 +26,12 @@ export class TenantListingService {
 
   private getAllByCategory$: WritableSignal<State<Page<CardListing>>> =signal(State.Builder<Page<CardListing>>().forInit());
   getAllByCategorySignal=computed(()=> this.getAllByCategory$());
+
+  //instead of writable signal,we need to implement subject, hence we don't want the signal emits value everytime.
+  private search$: Subject<State<Page<CardListing>>> =new Subject<State<Page<CardListing>>>();
+  searchSignal = this.search$.asObservable();
+  //we have a public observable, we can search but we cant modify by just calling the service.
+
 
   getAllByCategory(pageRequest: Pagination, category:CategoryName){
     let params =createPaginationOption(pageRequest);
@@ -50,5 +59,15 @@ export class TenantListingService {
   resetGetOneByPublicId(){
     this.getOneByPublicId$.set(State.Builder<Listing>().forInit());
   };
+
+
+  searchListing(searchParams: Search, pageRequest: Pagination){
+    const params =createPaginationOption(pageRequest);
+    this.http.post<Page<CardListing>>(`${environment.API_URL}/tenant-listing/search`,searchParams, {params}).subscribe({
+      next:displayListingCards => this.search$.next(State.Builder<Page<CardListing>>().forSuccess(displayListingCards)),
+      error: err =>this.search$.next(State.Builder<Page<CardListing>>().forError(err)),
+    })
+  }
+
 
 }
