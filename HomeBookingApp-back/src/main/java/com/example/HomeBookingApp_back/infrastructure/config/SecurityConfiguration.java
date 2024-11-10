@@ -26,10 +26,12 @@ public class SecurityConfiguration {
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
         requestHandler.setCsrfRequestAttributeName(null);
         http.authorizeHttpRequests(authorize -> authorize
-                //we need this permissions so that without log in any account listing can be accessible.
+
+                //we need this permissions so that some features can be accessible without log into any account.
                         .requestMatchers(HttpMethod.GET, "api/tenant-listing/get-all-by-category").permitAll()
                         .requestMatchers(HttpMethod.GET, "api/tenant-listing/get-one").permitAll()
                         .requestMatchers(HttpMethod.GET, "api/booking/check-availability").permitAll()
+                        .requestMatchers(HttpMethod.GET, "api/tenant-listing/search").permitAll()
                         .requestMatchers(HttpMethod.GET, "assets/*").permitAll()
 
                         .anyRequest().authenticated())
