@@ -76,4 +76,10 @@ public class LandlordService {
         return listingRepository.findAllByPublicIdIn(allListingsPublicId)
                 .stream().map(listingMapper::listingToDisplayCardListingDTO).toList();
     }
+
+    @Transactional
+    public Optional<DisplayCardListingDTO> getByPublicIdAndLandlordPublicId(UUID listingPublicId, UUID landlordPublicId) {
+        return listingRepository.findOneByPublicIdAndLandlordPublicId(listingPublicId, landlordPublicId)
+                .map(listingMapper::listingToDisplayCardListingDTO);
+    }
 }

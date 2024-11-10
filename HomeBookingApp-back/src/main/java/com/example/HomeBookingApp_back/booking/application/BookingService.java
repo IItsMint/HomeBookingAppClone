@@ -6,6 +6,7 @@ import com.example.HomeBookingApp_back.booking.application.dto.NewBookingDTO;
 import com.example.HomeBookingApp_back.booking.domain.Booking;
 import com.example.HomeBookingApp_back.booking.mapper.BookingMapper;
 import com.example.HomeBookingApp_back.booking.repository.BookingRepository;
+import com.example.HomeBookingApp_back.infrastructure.config.SecurityUtils;
 import com.example.HomeBookingApp_back.listing.application.LandlordService;
 import com.example.HomeBookingApp_back.listing.application.dto.DisplayCardListingDTO;
 import com.example.HomeBookingApp_back.listing.application.dto.ListingCreateBookingDTO;
@@ -103,9 +104,17 @@ public class BookingService {
     //let's create cancel method for the user.
     //don't forget to transactional here , it ain't delete if you miss it.
     @Transactional
-    public State<UUID, String> cancel(UUID bookingPublicId, UUID listingPublicId) {
+    public State<UUID, String> cancel(UUID bookingPublicId, UUID listingPublicId, boolean byLandlord) {
         ReadUserDTO connectedUser =userService.getAuthenticatedUserFromSecurityContext();
-        int deleteSuccess =bookingRepository.deleteBookingByFkTenantAndPublicId(connectedUser.publicId(), bookingPublicId);
+        int deleteSuccess = 0;
+
+        if(SecurityUtils.hasCurrentUserAnyOfAuthorities(SecurityUtils.ROLE_LANDLORD) && byLandlord){
+            deleteSuccess = handleDeletionForLandlord(bookingPublicId, listingPublicId, connectedUser, deleteSuccess);
+        }
+        else {
+            deleteSuccess =bookingRepository.deleteBookingByFkTenantAndPublicId(connectedUser.publicId(), bookingPublicId);
+        }
+        bookingRepository.deleteBookingByFkTenantAndPublicId(connectedUser.publicId(), bookingPublicId);
 
         if(deleteSuccess >= 1){
             return State.<UUID, String>builder().forSuccess(bookingPublicId);
@@ -115,4 +124,26 @@ public class BookingService {
         }
 
     }
+
+    private int handleDeletionForLandlord(UUID bookingPublicId, UUID listingPublicId, ReadUserDTO connectedUser, int deleteSuccess) {
+        Optional<DisplayCardListingDTO> listingVerificationOptional =landlordService.getByPublicIdAndLandlordPublicId(listingPublicId, connectedUser.publicId());
+
+        if(listingVerificationOptional.isPresent()){
+            deleteSuccess = bookingRepository.deleteBookingByPublicIdAndFkListing(bookingPublicId, listingVerificationOptional.get().publicId());
+        }
+
+        return deleteSuccess;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookedListingDTO> getBookedListingForLandlord() {
+        ReadUserDTO connectedUser = userService.getAuthenticatedUserFromSecurityContext();
+
+        List<DisplayCardListingDTO> allProperties =landlordService.getAllProperties(connectedUser);
+        List<UUID> allPropertyPublicIds =allProperties.stream().map(DisplayCardListingDTO::publicId).toList();
+        List<Booking> allBookings =bookingRepository.findAllByFkListingIn(allPropertyPublicIds);
+
+        return mapBookingToBookedListing(allBookings, allProperties);
+    }
+
 }

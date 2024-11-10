@@ -1,5 +1,5 @@
 <h1>My Bookings</h1>
-<h2>Previous & Future Reservations</h2>
+<h2>Previous & Future Bookings</h2>
 <div class="listing-grid">
   @for (bookedListing of bookedListings; track bookedListing.bookingPublicId){
   <app-card-listing [listing]="bookedListing" [cardMode]="'booking'" (cancelBooking)="onCancelBooking($event)"></app-card-listing>

@@ -1,0 +1,20 @@
+<h1>Reservation Management Dashboard</h1>
+<h2>Previous & Future Reservations for your Property</h2>
+<div class="listing-grid">
+  @for (reservation of reservationListing; track reservation.bookingPublicId){
+    <app-card-listing [listing]="reservation" [cardMode]="'booking'" (cancelBooking)="onCancelReservation($event)"></app-card-listing>
+  }
+</div>
+
+@if(!loading && reservationListing.length === 0){
+  <div class="flex flex-column align-items-center justify-content-center h-10rem">
+    <h1>No Scheduled Reservations</h1>
+    <div class="text-xl">No Reservations Yet, Start Your Hosting Journey Here!</div>
+  </div>
+}
+
+@if (loading){
+  <div class="flex justify-content-center align-items-center h-10rem">
+    <fa-icon class="text-primary ml-2" icon="circle-notch" animation="spin-pulse" size="3x"></fa-icon>
+  </div>
+}

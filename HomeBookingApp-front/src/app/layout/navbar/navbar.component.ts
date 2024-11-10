@@ -61,21 +61,21 @@ export class NavbarComponent implements  OnInit{
     if (this.authService.isAuthenticated()) {
       return [
         {
-          label: "My properties",
+          label: "My Bookings",
+          routerLink: "booking",
+        },
+        {
+          label: "My Properties",
           routerLink: "landlord/properties",
           visible: this.hasToBeLandlord(),
         },
         {
-          label: "My booking",
-          routerLink: "booking",
-        },
-        {
-          label: "My reservation",
+          label: "Booking Requests",
           routerLink: "landlord/reservation",
           visible: this.hasToBeLandlord(),
         },
         {
-          label: "Log out",
+          label: "Sign out",
           command: this.logout
         },
       ]
@@ -100,7 +100,7 @@ export class NavbarComponent implements  OnInit{
 
   openNewListing(): void{
     this.ref = this.dialogService.open(PropertiesCreateComponent,  {
-      width: "60%", header:"Airbnb your home", closable:true, focusOnShow:true, modal:true, showHeader:true
+      width: "60%", header:"Your Home, Their Adventure", closable:true, focusOnShow:true, modal:true, showHeader:true
     })
   }
 

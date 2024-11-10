@@ -22,9 +22,12 @@ export class BookingService {
   private getBookedListing$: WritableSignal<State<Array<BookedListing>>> =signal(State.Builder<Array<BookedListing>>().forInit());
   getBookedListingSignal =computed(() =>this.getBookedListing$());
 
-  private cancel$: WritableSignal<State<string>>
-    = signal(State.Builder<string>().forInit());
-  cancelSig = computed(() => this.cancel$());
+  private cancel$: WritableSignal<State<string>> =signal(State.Builder<string>().forInit());
+  cancelSig =computed(() => this.cancel$());
+
+  private getBookedListingForLandlord$: WritableSignal<State<Array<BookedListing>>> =signal(State.Builder<Array<BookedListing>>().forInit());
+  getBookedListingForLandlordSignal =computed(() =>this.getBookedListingForLandlord$());
+
 
 
   constructor() { }
@@ -69,9 +72,16 @@ export class BookingService {
     })
   };
 
+  getBookedListingForLandlord(): void {
+    this.http.get<Array<BookedListing>>(`${environment.API_URL}/booking/get-booked-listing-for-landlord`).subscribe({
+      next: bookedListings =>this.getBookedListingForLandlord$.set(State.Builder<Array<BookedListing>>().forSuccess(bookedListings)),
+      error: err =>this.getBookedListingForLandlord$.set(State.Builder<Array<BookedListing>>().forError(err)),
+    })
+  };
+
   cancel(bookingPublicId: string, listingPublicId: string, byLandlord: boolean) {
-    const params = new HttpParams().set("bookingPublicId", bookingPublicId)
-      .set("listingPublicId", listingPublicId).set("byLandlord", byLandlord);
+    const params = new HttpParams()
+      .set("bookingPublicId", bookingPublicId).set("listingPublicId", listingPublicId).set("byLandlord", byLandlord);
     this.http.delete<string>(`${environment.API_URL}/booking/cancel`, {params}).subscribe({
         next: canceledPublicId =>this.cancel$.set(State.Builder<string>().forSuccess(canceledPublicId)),
         error: err =>this.cancel$.set(State.Builder<string>().forError(err)),
