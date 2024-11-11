@@ -46,12 +46,12 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
     ngOnInit(): void {
       this.startNewSearch();
-        this.listenToChangeCategory();
+      this.listenToChangeCategory();
     }
 
   constructor() {
-      this.listenToGetAllCategory();
-      this.listenToSearch();
+    this.listenToSearch();//this needs to be on top of it, or first search will be bugged.
+    this.listenToGetAllCategory();
   }
 
   loading=false;
