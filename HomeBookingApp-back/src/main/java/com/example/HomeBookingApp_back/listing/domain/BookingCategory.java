@@ -12,6 +12,8 @@ public enum BookingCategory {
     CONTAINERS,
     CAMPING,
     CASTLE,
+    SKIING,
+    CAMPERS,
     ARTIC,
     BOAT,
     BED_AND_BREAKFASTS,
