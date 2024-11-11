@@ -24,7 +24,7 @@
       </button>
     </div>
     <div class="p-toolbar-group-end sm:hidden md:flex">
-      @if(authService.isAuthenticated()){
+      @if(authService.isAuthenticated() && hasToBeLandlord()){
         <a class="p-button p-button-link" (click)="openNewListing()">List Your Property</a>
       }
 
