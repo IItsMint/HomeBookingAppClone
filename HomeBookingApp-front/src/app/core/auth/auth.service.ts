@@ -73,4 +73,5 @@ export class AuthService {
     return this.fetchUser$().value!.authorities!
       .some((authority: string) => authorities.includes(authority));
   }
+
 }

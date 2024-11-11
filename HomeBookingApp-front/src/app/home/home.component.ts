@@ -45,8 +45,8 @@ export class HomeComponent implements OnInit, OnDestroy{
         }
     }
     ngOnInit(): void {
+      this.startNewSearch();
         this.listenToChangeCategory();
-        this.startNewSearch();
     }
 
   constructor() {
@@ -87,6 +87,7 @@ export class HomeComponent implements OnInit, OnDestroy{
 
   //let's apply filtering to the home page from the search bar params.
   private startNewSearch(){
+    this.initialSearch=false;//we need this line so that we can use filtering with already filtered value.
     this.activatedRouteService.queryParams.pipe(filter(params =>params['location'])).subscribe({
       next: params =>{
         this.searchLoadingStatus =true;
